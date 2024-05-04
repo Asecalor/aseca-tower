@@ -1,6 +1,6 @@
 # Control Tower
 
-## Proyect Set Up
+## Project Set Up
 
 You should create an `.env` file in the root of the proyect and add the following variables:
 
