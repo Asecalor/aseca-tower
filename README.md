@@ -8,7 +8,7 @@ You should create an `.env` file in the root of the proyect and add the followin
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_NAME=db-name
-DATABASE_URL=postgresql://postgres:postgres@localhost:5434/db-name
+DATABASE_URL=postgresql://postgres:postgres@control-tower-db:5432/db-name
 ```
 
 ## Run Container

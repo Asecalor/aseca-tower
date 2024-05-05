@@ -1,15 +1,24 @@
 version: '3.8'
 services:
   database:
+    container_name: "control-tower-db"
     image: postgres:16-alpine
+    restart: always
     ports:
       - '5434:5432'
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
-    networks:
-      - control-tower
 
-networks:
-  control-tower:
+  api:
+    container_name: "control-tower-api"
+    depends_on:
+      - database
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./src:/app/src
+    ports:
+      - '3001:3001'
