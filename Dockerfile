@@ -16,7 +16,7 @@ COPY tsconfig.json ./tsconfig.json
 COPY nest-cli.json ./nest-cli.json
 
 RUN npm run build
-#Nest runs on port 3000
-EXPOSE 3001
+
+EXPOSE 3000
 
 CMD npm run db:migrate && npm run start:dev
