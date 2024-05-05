@@ -11,7 +11,7 @@ You should create an .env file in the root of the project and add the following 
 ```env
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=db-name
+DATABASE_NAME=control-tower
 DATABASE_URL=postgresql://postgres:postgres@control-tower-db:5432/control-tower
 ```
 
