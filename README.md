@@ -1,18 +1,22 @@
 # Control Tower
 
-## Project Set Up
+## Installation
+```bash
+$ npm install
+```
+## Project Configuration
 
-You should create an `.env` file in the root of the proyect and add the following variables:
+You should create an .env file in the root of the project and add the following variables:
 
 ```env
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_NAME=db-name
-DATABASE_URL=postgresql://postgres:postgres@control-tower-db:5432/db-name
+DATABASE_URL=postgresql://postgres:postgres@control-tower-db:5432/control-tower
 ```
 
-## Run Container
-To run the container, run the following command on the terminal
+## Running the Container
+To run the container, execute the following command in the terminal:
 ```bash
-docker compose up --build
+$ docker compose up --build
 ```
