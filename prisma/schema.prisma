@@ -18,6 +18,7 @@ model Provider {
   id              Int               @id @default(autoincrement())
   name            String
   lastName        String
+  email           String            @unique
   Order           Order[]
   ProductProvider ProductProvider[]
 }
@@ -26,6 +27,7 @@ model Client {
   id       Int     @id @default(autoincrement())
   name     String
   lastName String
+  email    String  @unique
   address  String
   Order    Order[]
 }
