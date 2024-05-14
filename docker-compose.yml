@@ -10,10 +10,19 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: "CMD-SHELL pg_isready -d $$POSTGRES_DB"
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
   api:
     container_name: "control-tower-api"
     depends_on:
+      - database
+    links:
       - database
     build:
       context: ./
@@ -22,3 +31,6 @@ services:
       - ./src:/app/src
     ports:
       - '3000:3000'
+
+volumes:
+  db-data:
