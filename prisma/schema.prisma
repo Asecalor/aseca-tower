@@ -37,6 +37,7 @@ model Order {
   clientId     Int
   providerId   Int
   quantity     Int
+  status       String         @default("PENDING") // PENDING,DELIVERING,DELIVERED
   totalAmount  Float
   client       Client         @relation(fields: [clientId], references: [id])
   provider     Provider       @relation(fields: [providerId], references: [id])
