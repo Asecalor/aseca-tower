@@ -21,15 +21,17 @@ model Provider {
   email           String            @unique
   Order           Order[]
   ProductProvider ProductProvider[]
+  Reviews         Reviews[]
 }
 
 model Client {
-  id       Int     @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String
   lastName String
-  email    String  @unique
+  email    String    @unique
   address  String
   Order    Order[]
+  Reviews  Reviews[]
 }
 
 // Add a table to log the orders approved and the day when the order was approved
@@ -38,11 +40,13 @@ model Order {
   id           Int            @id @default(autoincrement())
   clientId     Int
   providerId   Int
-  status       String         @default("PENDING") // PENDING,APPROVED,REJECTED,DELIVERED
+  status       String         @default("PENDING") // PENDING,APPROVED,REJECTED,DELIVERED,REVIEWED
   totalAmount  Float
   client       Client         @relation(fields: [clientId], references: [id])
   provider     Provider       @relation(fields: [providerId], references: [id])
   orderProduct OrderProduct[]
+  salesLog     SalesLog?
+  review       Reviews?
 }
 
 model OrderProduct {
@@ -61,4 +65,40 @@ model ProductProvider {
   product    Product  @relation(fields: [productId], references: [id])
   provider   Provider @relation(fields: [providerId], references: [id])
   price      Float
+}
+
+// If the order is approved, a record is added to the SalesLog table to mark the day when the order was approved
+model SalesLog {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @unique
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+}
+
+// When a product of a warehouse is out of stock, a record is added to the StockOut table
+model StockOut {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  warehouseId Int
+  createdAt   DateTime @default(now())
+}
+
+// When a product of a warehouse is replenished, a record is added to the Replenishment table
+model Replenishment {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  warehouseId Int
+  createdAt   DateTime @default(now())
+}
+
+model Reviews {
+  id         Int      @id @default(autoincrement())
+  providerId Int
+  clientId   Int
+  orderId    Int      @unique
+  rating     Int
+  comment    String
+  provider   Provider @relation(fields: [providerId], references: [id])
+  client     Client   @relation(fields: [clientId], references: [id])
+  order      Order    @relation(fields: [orderId], references: [id])
 }
