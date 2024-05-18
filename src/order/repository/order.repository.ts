@@ -74,4 +74,41 @@ export class OrderRepository implements IOrderRepository {
       })
       .filter((productDto) => productDto !== null);
   }
+
+  async getOrderStatus(orderId: number): Promise<string | null> {
+    const order = await this.db.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+    return order?.status || null;
+  }
+
+  async updateOrderStatus(orderId: number, status: string): Promise<void> {
+    await this.db.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status,
+      },
+    });
+  }
+
+  async updatePendingToAccepted(orderId: number): Promise<void> {
+    await this.db.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: 'ACCEPTED',
+      },
+    });
+
+    await this.db.salesLog.create({
+      data: {
+        orderId,
+      },
+    });
+  }
 }

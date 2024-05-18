@@ -10,6 +10,9 @@ import { IOrderRepository } from '../repository/order.repository.interface';
 import { IClientRepository } from '../../client/repository/client.repository.interface';
 import { OrderWithAddressDto } from '../dto/order-with-address.dto';
 import { OrderResponseDto } from '../dto/order-reponse.dto';
+import { OrderUpdateDto } from '../dto/order-update.dto';
+import { statusTransitions } from '../util/util';
+import { OrderStatus } from '../model/order-status';
 
 @Injectable()
 export class OrderService implements IOrderService {
@@ -40,5 +43,33 @@ export class OrderService implements IOrderService {
       );
     }
     return orderCreated;
+  }
+
+  async updateOrderStatus(orderId: number, updateOrder: OrderUpdateDto) {
+    const currentStatus = await this.orderRepository.getOrderStatus(orderId);
+    if (!currentStatus) {
+      throw new NotFoundException('Order not found');
+    }
+    const requestedStatusEnum = OrderStatus[updateOrder.status];
+    if (!requestedStatusEnum) {
+      throw new ConflictException('Invalid status');
+    }
+    const currentStatusEnum = OrderStatus[currentStatus];
+    const allowedTransitions = statusTransitions.get(currentStatusEnum);
+
+    if (
+      !allowedTransitions ||
+      !allowedTransitions.includes(requestedStatusEnum)
+    ) {
+      throw new ConflictException('Invalid status transition');
+    }
+    if (
+      currentStatusEnum === OrderStatus.PENDING &&
+      requestedStatusEnum === OrderStatus.ACCEPTED
+    ) {
+      await this.orderRepository.updatePendingToAccepted(orderId);
+    } else {
+      await this.orderRepository.updateOrderStatus(orderId, updateOrder.status);
+    }
   }
 }
