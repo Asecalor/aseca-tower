@@ -45,7 +45,7 @@ export class OrderRepository implements IOrderRepository {
     );
   }
 
-  async getProductsWithProvider(
+  private async getProductsWithProvider(
     products: ProductOrderDto[],
     providerId: number,
   ): Promise<ProductPriceDto[]> {

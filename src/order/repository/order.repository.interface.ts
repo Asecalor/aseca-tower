@@ -7,9 +7,4 @@ export abstract class IOrderRepository {
   abstract createOrder(
     order: OrderWithAddressDto,
   ): Promise<OrderResponseDto | null>;
-
-  abstract getProductsWithProvider(
-    products: ProductOrderDto[],
-    providerId: number,
-  ): Promise<ProductPriceDto[]>;
 }
