@@ -1,6 +1,11 @@
 import { IOrderService } from './order.service.interface';
 import { CreateOrderDto } from '../dto/create-order.dto';
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IOrderRepository } from '../repository/order.repository.interface';
 import { IClientRepository } from '../../client/repository/client.repository.interface';
 import { OrderWithAddressDto } from '../dto/order-with-address.dto';
