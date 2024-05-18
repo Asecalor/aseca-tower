@@ -279,7 +279,6 @@ async function main() {
     'Mate Taragüi',
   ];
 
-
   for (let i = 0; i < 50; i++) {
     await prisma.product.create({
       data: {
@@ -323,7 +322,6 @@ async function main() {
       },
     });
   }
-
 
   // Obtener todos los productos y proveedores
   const products = await prisma.product.findMany();

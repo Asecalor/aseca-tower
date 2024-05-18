@@ -32,11 +32,13 @@ model Client {
   Order    Order[]
 }
 
+// Add a table to log the orders approved and the day when the order was approved
+
 model Order {
   id           Int            @id @default(autoincrement())
   clientId     Int
   providerId   Int
-  status       String         @default("PENDING") // PENDING,DELIVERING,DELIVERED
+  status       String         @default("PENDING") // PENDING,APPROVED,REJECTED,DELIVERED
   totalAmount  Float
   client       Client         @relation(fields: [clientId], references: [id])
   provider     Provider       @relation(fields: [providerId], references: [id])

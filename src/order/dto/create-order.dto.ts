@@ -1,15 +1,15 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
+import { ProductOrderDto } from './product-order.dto';
 
-export class CreateOrderDto{
+export class CreateOrderDto {
   @IsNotEmpty()
   @IsNumber()
-  readonly userId: number
-
-  @IsNotEmpty()
-  @IsNumber()
-  readonly providerId: number
+  clientId: number;
 
   @IsNotEmpty()
   @IsNumber()
-  readonly productId: number
+  providerId: number;
+
+  @IsNotEmpty()
+  products: ProductOrderDto[];
 }
