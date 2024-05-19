@@ -13,6 +13,8 @@ import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { OrderUpdateDto } from '../dto/order-update.dto';
 import { statusTransitions } from '../util/util';
 import { OrderStatus } from '../model/order-status';
+import { Order } from '../model/order-model';
+import { GetOrderDto } from '../dto/get-order.dto';
 
 @Injectable()
 export class OrderService implements IOrderService {
@@ -72,4 +74,14 @@ export class OrderService implements IOrderService {
       await this.orderRepository.updateOrderStatus(orderId, updateOrder.status);
     }
   }
+
+  async getOrderById(orderId: number): Promise<GetOrderDto | null> {
+    const order= await this.orderRepository.getOrderWithProductsById(orderId)
+    if (!order){
+      throw new NotFoundException('Order not found')
+    }
+    return order
+  }
+
+
 }
