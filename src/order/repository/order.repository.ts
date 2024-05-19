@@ -6,6 +6,7 @@ import { ProductOrderDto } from '../dto/product-order.dto';
 import { ProductPriceDto } from '../dto/product-price.dto';
 import { calculateTotalOfOrder } from '../util/util';
 import { OrderWithAddressDto } from '../dto/order-with-address.dto';
+import { Order } from '../model/order-model';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {
@@ -41,6 +42,7 @@ export class OrderRepository implements IOrderRepository {
       orderCreated.id,
       orderCreated.providerId,
       order.address,
+      total,
       products,
     );
   }
@@ -111,4 +113,24 @@ export class OrderRepository implements IOrderRepository {
       },
     });
   }
+
+  async getOrderById(orderId: number): Promise<Order> {
+    const order= await  this.db.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+    if(!order){
+      return null;
+    }
+    return{
+      id: orderId,
+      clientId: order.clientId,
+      providerId: order.providerId,
+      status: order.status,
+      totalAmount: order.totalAmount,
+    }
+  }
+
+
 }

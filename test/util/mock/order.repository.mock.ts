@@ -3,6 +3,10 @@ import { OrderResponseDto } from '../../../src/order/dto/order-reponse.dto';
 
 export const orderRepositoryMock = {
   createOrder: jest.fn(),
+  getOrderStatus: jest.fn(),
+  updateOrderStatus: jest.fn(),
+  updatePendingToAccepted: jest.fn(),
+  getOrderById: jest.fn(),
 };
 
 export const createOrderMockWithSuccesfulResponse = (
@@ -12,6 +16,7 @@ export const createOrderMockWithSuccesfulResponse = (
     1,
     order.providerId,
     order.address,
+    100,
     order.products,
   );
 };

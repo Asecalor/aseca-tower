@@ -7,12 +7,12 @@ import { OrderController } from './controller/order.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { clientRepositoryProvider } from '../client/client.module';
 
-const orderServiceProvider = {
+export const orderServiceProvider = {
   provide: IOrderService,
   useClass: OrderService,
 };
 
-const orderRepositoryProvider = {
+export const orderRepositoryProvider = {
   provide: IOrderRepository,
   useClass: OrderRepository,
 };

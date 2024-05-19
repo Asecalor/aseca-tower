@@ -1,5 +1,6 @@
 import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { OrderWithAddressDto } from '../dto/order-with-address.dto';
+import { Order } from '../model/order-model';
 
 export abstract class IOrderRepository {
   abstract createOrder(
@@ -11,4 +12,6 @@ export abstract class IOrderRepository {
   abstract updateOrderStatus(orderId: number, status: string): Promise<void>;
 
   abstract updatePendingToAccepted(orderId: number): Promise<void>;
+
+  abstract getOrderById (orderId: number): Promise<Order| null>
 }
