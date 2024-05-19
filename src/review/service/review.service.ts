@@ -23,6 +23,10 @@ export class ReviewService implements IReviewService {
       throw new ConflictException('You can only review delivered orders')
     }
     await this.reviewRepository.createReview(clientId, reviewDto, order.providerId)
+    await this.orderRepository.updateOrderStatus(reviewDto.orderId, 'REVIEWED')
   }
 
+  async getAllRatingsByProvider() {
+    return this.reviewRepository.getAllRatingsByProvider();
+  }
 }

@@ -2,7 +2,7 @@ import { ProductPriceDto } from '../dto/product-price.dto';
 import { OrderStatus } from '../model/order-status';
 
 export const calculateTotalOfOrder = (products: ProductPriceDto[]): number => {
-  return products.reduce((acc, product) => acc + product.price, 0);
+  return products.reduce((acc, product) => acc + (product.price*product.quantity), 0);
 };
 
 //rejected and reviewed are terminal states

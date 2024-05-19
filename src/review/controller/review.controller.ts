@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { IReviewService } from '../service/review.service.interface';
 import { ReviewDto } from '../dto/review.dto';
 
@@ -11,5 +11,10 @@ export class ReviewController{
   async createReview(@Param('clientId',ParseIntPipe) clientId: number,
                      @Body() reviewDto: ReviewDto){
     return this.reviewService.createReview(clientId, reviewDto)
+  }
+
+  @Get('/ratings')
+  async getAllRatingsByProvider(){
+    return this.reviewService.getAllRatingsByProvider()
   }
 }
