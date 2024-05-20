@@ -328,9 +328,10 @@ async function main() {
   const providers = await prisma.provider.findMany();
 
   // Vincular cada proveedor con al menos 5 productos
+  let productIndex = 0;
   for (const provider of providers) {
-    // Escoge 5 productos aleatorios
-    const selectedProducts = getRandomItems(products, 5);
+    // Escoge 5 productos, empezando desde productIndex
+    const selectedProducts = products.slice(productIndex, productIndex + 5);
 
     // Crea una entrada en ProductProvider para cada combinación de proveedor y producto
     for (const product of selectedProducts) {
@@ -341,12 +342,8 @@ async function main() {
           price: getRandomInt(10, 1000),
         },
       });
+      productIndex++;
     }
-  }
-
-  function getRandomItems(arr: any[], numItems: number) {
-    const shuffled = arr.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, numItems);
   }
 
   console.log('Seed completed.');

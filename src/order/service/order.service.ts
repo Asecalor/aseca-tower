@@ -13,6 +13,10 @@ import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { OrderUpdateDto } from '../dto/order-update.dto';
 import { statusTransitions } from '../util/util';
 import { OrderStatus } from '../model/order-status';
+import { GetOrderDto } from '../dto/get-order.dto';
+import { catchError, firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class OrderService implements IOrderService {
@@ -21,6 +25,7 @@ export class OrderService implements IOrderService {
     private readonly orderRepository: IOrderRepository,
     @Inject(IClientRepository)
     private readonly clientRepository: IClientRepository,
+    private readonly httpService: HttpService,
   ) {}
   async createOrder(order: CreateOrderDto): Promise<OrderResponseDto> {
     const clientAddress = await this.clientRepository.getClientAddress(
@@ -42,6 +47,25 @@ export class OrderService implements IOrderService {
         'Some of products where not found or it not belongs to the provider',
       );
     }
+    //Here we send the order to the warehouse api
+    //If user wants to see the order status, should use GET order/{orderId}
+    //I use host.docker.internal to point outside the docker container (host) for that request
+    await firstValueFrom(
+      this.httpService
+        .post('http://host.docker.internal:3001/warehouse/order', orderCreated)
+        .pipe(
+          catchError((error: AxiosError) => {
+            if (
+              error.response?.status === 500 ||
+              error.response?.status === 409
+            ) {
+              //TODO: Implement logger to handle this error for testing purposes
+              console.log('Error in warehouse api');
+            }
+            return Promise.resolve();
+          }),
+        ),
+    );
     return orderCreated;
   }
 
@@ -71,5 +95,13 @@ export class OrderService implements IOrderService {
     } else {
       await this.orderRepository.updateOrderStatus(orderId, updateOrder.status);
     }
+  }
+
+  async getOrderById(orderId: number): Promise<GetOrderDto | null> {
+    const order = await this.orderRepository.getOrderWithProductsById(orderId);
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    return order;
   }
 }

@@ -8,4 +8,9 @@ export class ProductOrderDto {
   @IsNotEmpty()
   @IsNumber()
   quantity: number;
+
+  constructor(productId: number, quantity: number) {
+    this.productId = productId;
+    this.quantity = quantity;
+  }
 }

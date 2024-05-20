@@ -20,6 +20,10 @@ export const reviewServiceProvider = {
 @Module({
   imports: [PrismaModule],
   controllers: [ReviewController],
-  providers: [reviewRepositoryProvider, reviewServiceProvider,orderRepositoryProvider],
+  providers: [
+    reviewRepositoryProvider,
+    reviewServiceProvider,
+    orderRepositoryProvider,
+  ],
 })
 export class ReviewModule {}

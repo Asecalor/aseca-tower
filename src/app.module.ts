@@ -5,7 +5,7 @@ import { OrderModule } from './order/order.module';
 import { ReviewModule } from './review/review.module';
 
 @Module({
-  imports: [ClientModule, OrderModule,ReviewModule],
+  imports: [ClientModule, OrderModule, ReviewModule],
   controllers: [],
   providers: [],
 })

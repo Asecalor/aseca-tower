@@ -7,6 +7,7 @@ import { ProductPriceDto } from '../dto/product-price.dto';
 import { calculateTotalOfOrder } from '../util/util';
 import { OrderWithAddressDto } from '../dto/order-with-address.dto';
 import { Order } from '../model/order-model';
+import { GetOrderDto } from '../dto/get-order.dto';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {
@@ -115,22 +116,52 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async getOrderById(orderId: number): Promise<Order> {
-    const order= await  this.db.order.findUnique({
+    const order = await this.db.order.findUnique({
       where: {
         id: orderId,
       },
     });
-    if(!order){
+    if (!order) {
       return null;
     }
-    return{
+    return {
       id: orderId,
       clientId: order.clientId,
       providerId: order.providerId,
       status: order.status,
       totalAmount: order.totalAmount,
-    }
+    };
   }
+  async getOrderWithProductsById(orderId: number): Promise<GetOrderDto> {
+    const order = await this.db.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+    if (!order) {
+      return null;
+    }
 
+    const orderWithProducts = await this.db.orderProduct.findMany({
+      where: {
+        orderId: orderId,
+      },
+    });
 
+    const productsOrderDto = orderWithProducts.map(
+      (p) => new ProductOrderDto(p.productId, p.quantity),
+    );
+
+    const productsWithProvider = await this.getProductsWithProvider(
+      productsOrderDto,
+      order.providerId,
+    );
+
+    return new GetOrderDto(
+      order.totalAmount,
+      order.status,
+      order.providerId,
+      productsWithProvider,
+    );
+  }
 }
