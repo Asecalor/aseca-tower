@@ -7,5 +7,5 @@ import { GetOrderDto } from '../dto/get-order.dto';
 export abstract class IOrderService {
   abstract createOrder(order: CreateOrderDto): Promise<OrderResponseDto>;
   abstract updateOrderStatus(orderId: number, orderUpdate: OrderUpdateDto): any;
-  abstract getOrderById(orderId:number): Promise<GetOrderDto|null>
+  abstract getOrderById(orderId: number): Promise<GetOrderDto | null>;
 }

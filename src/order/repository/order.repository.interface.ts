@@ -14,7 +14,9 @@ export abstract class IOrderRepository {
 
   abstract updatePendingToAccepted(orderId: number): Promise<void>;
 
-  abstract getOrderWithProductsById (orderId: number): Promise<GetOrderDto| null>
+  abstract getOrderWithProductsById(
+    orderId: number,
+  ): Promise<GetOrderDto | null>;
 
-  abstract getOrderById(orderId: number): Promise<Order | null>
+  abstract getOrderById(orderId: number): Promise<Order | null>;
 }

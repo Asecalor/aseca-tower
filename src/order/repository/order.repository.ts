@@ -11,7 +11,6 @@ import { GetOrderDto } from '../dto/get-order.dto';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {
-
   constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
 
   async createOrder(
@@ -117,21 +116,21 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async getOrderById(orderId: number): Promise<Order> {
-    const order= await  this.db.order.findUnique({
+    const order = await this.db.order.findUnique({
       where: {
         id: orderId,
       },
     });
-    if(!order){
+    if (!order) {
       return null;
     }
-    return{
+    return {
       id: orderId,
       clientId: order.clientId,
       providerId: order.providerId,
       status: order.status,
       totalAmount: order.totalAmount,
-    }
+    };
   }
   async getOrderWithProductsById(orderId: number): Promise<GetOrderDto> {
     const order = await this.db.order.findUnique({
@@ -149,21 +148,20 @@ export class OrderRepository implements IOrderRepository {
       },
     });
 
-    const productsOrderDto = orderWithProducts.map(p => new ProductOrderDto(
-      p.productId,
-      p.quantity
-    ));
+    const productsOrderDto = orderWithProducts.map(
+      (p) => new ProductOrderDto(p.productId, p.quantity),
+    );
 
-    const productsWithProvider = await this.getProductsWithProvider(productsOrderDto, order.providerId);
+    const productsWithProvider = await this.getProductsWithProvider(
+      productsOrderDto,
+      order.providerId,
+    );
 
     return new GetOrderDto(
       order.totalAmount,
       order.status,
       order.providerId,
-      productsWithProvider
+      productsWithProvider,
     );
-
   }
-
-
 }

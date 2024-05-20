@@ -1,17 +1,23 @@
-import { IsInt, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
-export class ReviewDto{
-
+export class ReviewDto {
   @IsNumber()
   @IsNotEmpty()
-  readonly orderId: number
+  readonly orderId: number;
   @IsInt()
   @IsNotEmpty()
   @Min(1)
   @Max(10)
-  readonly rating: number
+  readonly rating: number;
 
   @IsNotEmpty()
   @IsString()
-  readonly comment: string
+  readonly comment: string;
 }

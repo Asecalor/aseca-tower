@@ -5,19 +5,22 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ReviewRatingDto } from '../dto/review-rating.dto';
 
 @Injectable()
-export class ReviewRepository implements  IReviewRepository{
-
+export class ReviewRepository implements IReviewRepository {
   constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
 
-  async createReview(clientId: number, reviewDto: ReviewDto, providerId: number): Promise<void> {
+  async createReview(
+    clientId: number,
+    reviewDto: ReviewDto,
+    providerId: number,
+  ): Promise<void> {
     await this.db.reviews.create({
       data: {
         clientId,
         providerId,
         orderId: reviewDto.orderId,
         rating: reviewDto.rating,
-        comment: reviewDto.comment
-      }
+        comment: reviewDto.comment,
+      },
     });
   }
 
@@ -25,16 +28,17 @@ export class ReviewRepository implements  IReviewRepository{
     const ratings = await this.db.reviews.groupBy({
       by: ['providerId'],
       _avg: {
-        rating: true
+        rating: true,
       },
       orderBy: {
         _avg: {
-          rating: 'asc'
-        }
-      }
+          rating: 'asc',
+        },
+      },
     });
-    return ratings.map(rating => new ReviewRatingDto(rating.providerId, Math.round(rating._avg.rating)));
+    return ratings.map(
+      (rating) =>
+        new ReviewRatingDto(rating.providerId, Math.round(rating._avg.rating)),
+    );
   }
-
-
 }

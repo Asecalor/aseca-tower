@@ -7,8 +7,13 @@ export class OrderResponseDto {
   readonly totalAmount: number;
   readonly productOrders: ProductOrderDto[];
 
-
-  constructor(orderId: number, providerId: number, clientAddress: string, totalAmount: number, productOrders: ProductOrderDto[]) {
+  constructor(
+    orderId: number,
+    providerId: number,
+    clientAddress: string,
+    totalAmount: number,
+    productOrders: ProductOrderDto[],
+  ) {
     this.orderId = orderId;
     this.providerId = providerId;
     this.clientAddress = clientAddress;
