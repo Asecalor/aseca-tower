@@ -4,6 +4,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { IOrderRepository } from '../repository/order.repository.interface';
@@ -17,6 +18,7 @@ import { GetOrderDto } from '../dto/get-order.dto';
 import { catchError, firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { AxiosError } from 'axios';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class OrderService implements IOrderService {
@@ -55,14 +57,16 @@ export class OrderService implements IOrderService {
         .post('http://host.docker.internal:3001/warehouse/order', orderCreated)
         .pipe(
           catchError((error: AxiosError) => {
-            if (
-              error.response?.status === 500 ||
-              error.response?.status === 409
-            ) {
-              //TODO: Implement logger to handle this error for testing purposes
-              console.log('Error in warehouse api');
+            if (error.response?.status === 409) {
+              this.orderRepository.updateOrderStatus(
+                orderCreated.orderId,
+                'REJECTED',
+              );
+              throw new ConflictException('Insufficient stock');
             }
-            return Promise.resolve();
+            throw new InternalServerErrorException(
+              'Warehouse Api is not available',
+            );
           }),
         ),
     );
@@ -103,5 +107,37 @@ export class OrderService implements IOrderService {
       throw new NotFoundException('Order not found');
     }
     return order;
+  }
+  //Cron task to handle pending orders every 30 seconds
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  private async handlePendingOrders() {
+    const pendingOrders = await this.orderRepository.getAllPendingOrders();
+    for (const order of pendingOrders) {
+      const clientAddress = await this.clientRepository.getClientAddress(
+        order.clientId,
+      );
+      const orderData = new OrderResponseDto(
+        order.clientId,
+        order.providerId,
+        clientAddress,
+        order.totalAmount,
+        await this.orderRepository.getProductOrdersByOrderId(order.id),
+      );
+      await firstValueFrom(
+        this.httpService
+          .post('http://host.docker.internal:3001/warehouse/order', orderData)
+          .pipe(
+            catchError((error: AxiosError) => {
+              if (error.response?.status === 409) {
+                this.orderRepository.updateOrderStatus(order.id, 'REJECTED');
+                throw new ConflictException('Insufficient stock');
+              }
+              throw new InternalServerErrorException(
+                'Warehouse Api is not available',
+              );
+            }),
+          ),
+      );
+    }
   }
 }

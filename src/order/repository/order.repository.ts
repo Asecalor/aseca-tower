@@ -164,4 +164,24 @@ export class OrderRepository implements IOrderRepository {
       productsWithProvider,
     );
   }
+
+  async getAllPendingOrders(): Promise<Order[]> {
+    return this.db.order.findMany({
+      where: {
+        status: 'PENDING',
+      },
+    });
+  }
+
+  async getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDto[]> {
+    const orderProducts = await this.db.orderProduct.findMany({
+      where: {
+        orderId,
+      },
+    });
+    return orderProducts.map(
+      (orderProduct) =>
+        new ProductOrderDto(orderProduct.productId, orderProduct.quantity),
+    );
+  }
 }
