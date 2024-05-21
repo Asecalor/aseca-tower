@@ -7,6 +7,8 @@ export const orderRepositoryMock = {
   updateOrderStatus: jest.fn(),
   updatePendingToAccepted: jest.fn(),
   getOrderById: jest.fn(),
+  getAllPendingOrders: jest.fn(),
+  getProductOrdersByOrderId: jest.fn(),
 };
 
 export const createOrderMockWithSuccesfulResponse = (
