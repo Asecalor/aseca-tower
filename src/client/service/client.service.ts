@@ -2,11 +2,11 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { IClientRepository } from '../repository/client.repository.interface';
 import { CreateClientDto } from '../dto/create-client.dto';
-import { Client } from '../model/client-model';
+import { Client } from '../dto';
 
 @Injectable()
 export class ClientService {
-  constructor(private readonly clientRepository: IClientRepository) {}
+  constructor(private readonly clientRepository: IClientRepository) { }
 
   async create(createClientDto: CreateClientDto): Promise<Client> {
     const existingClient = await this.clientRepository.findByEmail(createClientDto.email);
@@ -16,9 +16,13 @@ export class ClientService {
     return this.clientRepository.create(createClientDto);
   }
 
+  async getClients() {
+    return this.clientRepository.get()
+  }
+
 
   async getClientById(id: number) {
-    return this.clientRepository.getClientById(id)
+    return this.clientRepository.findById(id)
   }
 
 }
