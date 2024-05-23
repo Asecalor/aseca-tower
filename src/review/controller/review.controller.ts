@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { IReviewService } from '../service/review.service.interface';
 import { ReviewDto } from '../dto/review.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ReviewRatingDto } from '../dto/review-rating.dto';
 
 @ApiTags('Review')
 @Controller('review')
@@ -29,6 +30,7 @@ export class ReviewController {
   }
 
   @Get('/ratings')
+  @ApiResponse({ status: 200, type: [ReviewRatingDto] })
   async getAllRatingsByProvider() {
     return this.reviewService.getAllRatingsByProvider();
   }

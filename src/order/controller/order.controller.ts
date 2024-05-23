@@ -12,15 +12,16 @@ import {
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { OrderUpdateDto } from '../dto/order-update.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Order')
 @Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: IOrderService) {}
+  constructor(private readonly orderService: IOrderService) { }
 
   @Post()
   @HttpCode(201)
+  @ApiResponse({ status: 201, type: OrderResponseDto })
   async createOrder(@Body() order: CreateOrderDto): Promise<OrderResponseDto> {
     return this.orderService.createOrder(order);
   }
@@ -42,6 +43,7 @@ export class OrderController {
 
   @Get('/:orderId')
   @HttpCode(200)
+  @ApiResponse({ status: 200, type: OrderResponseDto })
   async getOrderById(@Param('orderId', ParseIntPipe) orderId: number) {
     return this.orderService.getOrderById(orderId);
   }

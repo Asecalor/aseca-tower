@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { IReviewRepository } from '../repository/review.repository.interface';
 import { IOrderRepository } from '../../order/repository/order.repository.interface';
+import { ReviewRatingDto } from '../dto/review-rating.dto';
 
 @Injectable()
 export class ReviewService implements IReviewService {
@@ -16,7 +17,7 @@ export class ReviewService implements IReviewService {
     private readonly reviewRepository: IReviewRepository,
     @Inject(IOrderRepository)
     private readonly orderRepository: IOrderRepository,
-  ) {}
+  ) { }
 
   async createReview(clientId: number, reviewDto: ReviewDto) {
     const order = await this.orderRepository.getOrderById(reviewDto.orderId);
@@ -37,7 +38,7 @@ export class ReviewService implements IReviewService {
     await this.orderRepository.updateOrderStatus(reviewDto.orderId, 'REVIEWED');
   }
 
-  async getAllRatingsByProvider() {
+  async getAllRatingsByProvider(): Promise<ReviewRatingDto[]> {
     return this.reviewRepository.getAllRatingsByProvider();
   }
 }

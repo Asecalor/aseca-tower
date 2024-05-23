@@ -16,12 +16,12 @@ export class ClientService {
     return this.clientRepository.create(createClientDto);
   }
 
-  async getClients() {
+  async getClients(): Promise<Client[]> {
     return this.clientRepository.findAll()
   }
 
 
-  async getClientById(id: number) {
+  async getClientById(id: number): Promise<Client | null> {
     return this.clientRepository.findById(id)
   }
 
