@@ -13,7 +13,7 @@ export class ClientRepository implements IClientRepository {
     });
   }
 
-  async get(): Promise<Client[]> {
+  async findAll(): Promise<Client[]> {
     return this.db.client.findMany();
   }
 

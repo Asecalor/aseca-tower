@@ -17,7 +17,7 @@ export class ClientService {
   }
 
   async getClients() {
-    return this.clientRepository.get()
+    return this.clientRepository.findAll()
   }
 
 
