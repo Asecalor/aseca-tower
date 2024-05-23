@@ -76,7 +76,7 @@ export class OrderService implements IOrderService {
   async updateOrderStatus(orderId: number, updateOrder: OrderUpdateDto) {
     const currentStatus = await this.orderRepository.getOrderStatus(orderId);
     if (!currentStatus) {
-      throw new NotFoundException('Order not found');
+      throw new NotFoundException('Order not found'); //Pendientes, rechazadas ,aceptadas,entregadas, reviewed
     }
     const requestedStatusEnum = OrderStatus[updateOrder.status];
     if (!requestedStatusEnum) {

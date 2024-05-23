@@ -6,6 +6,7 @@ export const orderRepositoryMock = {
   getOrderStatus: jest.fn(),
   updateOrderStatus: jest.fn(),
   updatePendingToAccepted: jest.fn(),
+  getOrderWithProductsById: jest.fn(),
   getOrderById: jest.fn(),
   getAllPendingOrders: jest.fn(),
   getProductOrdersByOrderId: jest.fn(),

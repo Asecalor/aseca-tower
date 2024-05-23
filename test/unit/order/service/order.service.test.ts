@@ -15,7 +15,7 @@ describe('Order Service Unit Test', () => {
   let orderService: OrderService;
 
   beforeAll(() => {
-    orderService = new OrderService(orderRepositoryMock, clientRepositoryMock);
+    orderService = new OrderService(orderRepositoryMock, clientRepositoryMock, null);
   });
 
   it('should create an order with one provider product', async () => {

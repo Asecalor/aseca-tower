@@ -1,5 +1,8 @@
 export const clientRepositoryMock = {
   getClientAddress: jest.fn(),
+  findByEmail: jest.fn(),
+  create: jest.fn(),
+  getClientById: jest.fn(),
 };
 
 export const getClientAddressMockWithSuccesfulResponse = (
