@@ -1,17 +1,20 @@
 import { IClientRepository } from './client.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateClientDto } from '../dto/create-client.dto';
-import { Client } from '../model/client-model';
+import { Client, CreateClientDto } from '../dto';
 
 @Injectable()
 export class ClientRepository implements IClientRepository {
-  constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly db: PrismaService) { }
 
   async create(createClientDto: CreateClientDto): Promise<Client> {
     return this.db.client.create({
       data: createClientDto,
     });
+  }
+
+  async get(): Promise<Client[]> {
+    return this.db.client.findMany();
   }
 
 
@@ -32,7 +35,7 @@ export class ClientRepository implements IClientRepository {
     });
   }
 
-  async getClientById(clientId: number): Promise<Client | null> {
+  async findById(clientId: number): Promise<Client | null> {
     return this.db.client.findUnique({
       where: {
         id: clientId,
