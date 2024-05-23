@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common';
 import { IReviewService } from '../service/review.service.interface';
 import { ReviewDto } from '../dto/review.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Review')
 @Controller('review')
 export class ReviewController {
   constructor(
     @Inject(IReviewService) private readonly reviewService: IReviewService,
-  ) {}
+  ) { }
 
   @Post('/:clientId')
   @HttpCode(201)

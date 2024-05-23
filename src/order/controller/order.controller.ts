@@ -12,16 +12,24 @@ import {
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { OrderUpdateDto } from '../dto/order-update.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Order')
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: IOrderService) {}
 
-  @Post('create')
+  @Post()
   @HttpCode(201)
   async createOrder(@Body() order: CreateOrderDto): Promise<OrderResponseDto> {
     return this.orderService.createOrder(order);
   }
+
+  // @Get()
+  // @HttpCode(200)
+  // async getOrders(): Promise<OrderResponseDto[]> {
+  //   return this.orderService.getOrders();
+  // }
 
   @Put('/:orderId')
   @HttpCode(200)
