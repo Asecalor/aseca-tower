@@ -1,8 +1,16 @@
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateClientDto {
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   lastName: string;
+
+  @ApiProperty()
   email: string;
+
+  @ApiProperty()
   address: string;
 
   constructor(client: CreateClientDto) {
