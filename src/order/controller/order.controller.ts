@@ -9,10 +9,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { OrderResponseDto } from '../dto/order-reponse.dto';
-import { OrderUpdateDto } from '../dto/order-update.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CompleteOrderDTO, OrderDTO } from '../dto';
+import { CreateOrder, OrderUpdate } from '../input';
 
 @ApiTags('Order')
 @Controller('order')
@@ -21,30 +20,30 @@ export class OrderController {
 
   @Post()
   @HttpCode(201)
-  @ApiResponse({ status: 201, type: OrderResponseDto })
-  async createOrder(@Body() order: CreateOrderDto): Promise<OrderResponseDto> {
+  @ApiResponse({ status: 201, type: CompleteOrderDTO })
+  async createOrder(@Body() order: CreateOrder): Promise<CompleteOrderDTO> {
     return this.orderService.createOrder(order);
   }
 
-  // @Get()
-  // @HttpCode(200)
-  // async getOrders(): Promise<OrderResponseDto[]> {
-  //   return this.orderService.getOrders();
-  // }
+  @Get()
+  @HttpCode(200)
+  async getOrders(): Promise<OrderDTO[]> {
+    return this.orderService.getOrders();
+  }
 
   @Put('/:orderId')
   @HttpCode(200)
   async updateOrderStatus(
     @Param('orderId', ParseIntPipe) orderId: number,
-    @Body() orderUpdate: OrderUpdateDto,
+    @Body() orderUpdate: OrderUpdate,
   ) {
-    return this.orderService.updateOrderStatus(orderId, orderUpdate);
+    return this.orderService.updateOrderStatus(orderId, orderUpdate.status);
   }
 
   @Get('/:orderId')
   @HttpCode(200)
-  @ApiResponse({ status: 200, type: OrderResponseDto })
-  async getOrderById(@Param('orderId', ParseIntPipe) orderId: number) {
-    return this.orderService.getOrderById(orderId);
+  @ApiResponse({ status: 200, type: CompleteOrderDTO })
+  async getOrderById(@Param('orderId', ParseIntPipe) orderId: number): Promise<CompleteOrderDTO> {
+    return this.orderService.findOrderById(orderId);
   }
 }

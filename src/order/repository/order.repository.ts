@@ -1,21 +1,16 @@
 import { IOrderRepository } from './order.repository.interface';
-import { OrderResponseDto } from '../dto/order-reponse.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ProductOrderDto } from '../dto/product-order.dto';
-import { ProductPriceDto } from '../dto/product-price.dto';
 import { calculateTotalOfOrder } from '../util/util';
-import { OrderWithAddressDto } from '../dto/order-with-address.dto';
-import { Order } from '../model/order-model';
-import { GetOrderDto } from '../dto/get-order.dto';
+import { OrderStatus } from '../model';
+import { CreateOrder } from '../input';
+import { CompleteOrderDTO, CompleteProductDTO, OrderDTO, ProductOrderDTO } from '../dto';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {
-  constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly db: PrismaService) { }
 
-  async createOrder(
-    order: OrderWithAddressDto,
-  ): Promise<OrderResponseDto | null> {
+  async create(order: CreateOrder): Promise<CompleteOrderDTO> {
     const { providerId, products } = order;
     const productsWithPrice = await this.getProductsWithProvider(
       products,
@@ -39,19 +34,102 @@ export class OrderRepository implements IOrderRepository {
         quantity: product.quantity,
       })),
     });
-    return new OrderResponseDto(
-      orderCreated.id,
-      orderCreated.providerId,
-      order.address,
-      total,
-      products,
+
+    return new CompleteOrderDTO({ ...orderCreated, products: products });
+  }
+
+  async getStatus(orderId: number): Promise<string | null> {
+    const order = await this.db.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      select: {
+        status: true
+      }
+    });
+    return order?.status || null;
+  }
+
+  async update(orderId: number, status: OrderStatus): Promise<void> {
+    await this.db.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status,
+      },
+    });
+  }
+
+  async createLog(orderId: number): Promise<void> {
+    await this.db.salesLog.create({
+      data: {
+        orderId,
+      },
+    });
+  }
+
+  async findById(orderId: number): Promise<CompleteOrderDTO> {
+    const order = await this.db.order.findUnique({
+      where: {
+        id: orderId,
+
+      },
+      include: {
+        orderProduct: true,
+        client: {
+          select: {
+            address: true
+          }
+        }
+      }
+    });
+    if (!order) {
+      return null;
+    }
+
+    const products = order.orderProduct.map(product => new ProductOrderDTO(product))
+
+    return new CompleteOrderDTO({ ...order, products, adress: order.client.address });
+
+  }
+
+  async delete(orderId: number): Promise<void> {
+    await this.db.order.delete({
+      where: {
+        id: orderId,
+      },
+    });
+  }
+
+  async findByStatus(status: OrderStatus): Promise<OrderDTO[]> {
+    return await this.db.order.findMany({
+      where: {
+        status,
+      },
+    });
+  }
+
+  async findAll(): Promise<OrderDTO[]> {
+    return await this.db.order.findMany();
+  }
+
+  async getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDTO[]> {
+    const orderProducts = await this.db.orderProduct.findMany({
+      where: {
+        orderId,
+      },
+    });
+    return orderProducts.map(
+      (orderProduct) =>
+        new ProductOrderDTO(orderProduct),
     );
   }
 
   private async getProductsWithProvider(
-    products: ProductOrderDto[],
+    products: ProductOrderDTO[],
     providerId: number,
-  ): Promise<ProductPriceDto[]> {
+  ): Promise<CompleteProductDTO[]> {
     const productsIds = products.map((product) => product.productId);
     const productsWithProvider = await this.db.productProvider.findMany({
       where: {
@@ -69,119 +147,8 @@ export class OrderRepository implements IOrderRepository {
         if (!productWithProvider) {
           return null;
         }
-        return new ProductPriceDto(
-          productWithProvider.productId,
-          productWithProvider.price,
-          product.quantity,
-        );
+        return new CompleteProductDTO({ ...product, price: productWithProvider.price });
       })
       .filter((productDto) => productDto !== null);
-  }
-
-  async getOrderStatus(orderId: number): Promise<string | null> {
-    const order = await this.db.order.findUnique({
-      where: {
-        id: orderId,
-      },
-    });
-    return order?.status || null;
-  }
-
-  async updateOrderStatus(orderId: number, status: string): Promise<void> {
-    await this.db.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status,
-      },
-    });
-  }
-
-  async updatePendingToAccepted(orderId: number): Promise<void> {
-    await this.db.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status: 'ACCEPTED',
-      },
-    });
-
-    await this.db.salesLog.create({
-      data: {
-        orderId,
-      },
-    });
-  }
-
-  async getOrderById(orderId: number): Promise<Order> {
-    const order = await this.db.order.findUnique({
-      where: {
-        id: orderId,
-      },
-    });
-    if (!order) {
-      return null;
-    }
-    return {
-      id: orderId,
-      clientId: order.clientId,
-      providerId: order.providerId,
-      status: order.status,
-      totalAmount: order.totalAmount,
-    };
-  }
-  async getOrderWithProductsById(orderId: number): Promise<GetOrderDto> {
-    const order = await this.db.order.findUnique({
-      where: {
-        id: orderId,
-      },
-    });
-    if (!order) {
-      return null;
-    }
-
-    const orderWithProducts = await this.db.orderProduct.findMany({
-      where: {
-        orderId: orderId,
-      },
-    });
-
-    const productsOrderDto = orderWithProducts.map(
-      (p) => new ProductOrderDto(p.productId, p.quantity),
-    );
-
-    const productsWithProvider = await this.getProductsWithProvider(
-      productsOrderDto,
-      order.providerId,
-    );
-
-    return new GetOrderDto(
-      order.totalAmount,
-      order.status,
-      order.providerId,
-      productsWithProvider,
-    );
-  }
-
-  async getAllPendingOrders(): Promise<Order[]> {
-    return this.db.order.findMany({
-      where: {
-        status: 'PENDING',
-      },
-    });
-  }
-
-  async getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDto[]> {
-    const orderProducts = await this.db.orderProduct.findMany({
-      where: {
-        orderId,
-      },
-    });
-    return orderProducts.map(
-      (orderProduct) =>
-        new ProductOrderDto(orderProduct.productId, orderProduct.quantity),
-    );
   }
 }

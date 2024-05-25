@@ -1,7 +1,7 @@
-import { ProductPriceDto } from '../dto/product-price.dto';
+import { CompleteProductDTO } from '../dto';
 import { OrderStatus } from '../model/order-status';
 
-export const calculateTotalOfOrder = (products: ProductPriceDto[]): number => {
+export const calculateTotalOfOrder = (products: CompleteProductDTO[]): number => {
   return products.reduce(
     (acc, product) => acc + product.price * product.quantity,
     0,

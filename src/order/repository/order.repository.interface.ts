@@ -1,29 +1,23 @@
-import { OrderResponseDto } from '../dto/order-reponse.dto';
-import { OrderWithAddressDto } from '../dto/order-with-address.dto';
-import { Order } from '../model/order-model';
-import { GetOrderDto } from '../dto/get-order.dto';
-import { ProductOrderDto } from '../dto/product-order.dto';
+import { CompleteOrderDTO, OrderDTO, ProductOrderDTO } from '../dto';
+import { CreateOrder } from '../input';
+import { OrderStatus } from '../model';
 
 export abstract class IOrderRepository {
-  abstract createOrder(
-    order: OrderWithAddressDto,
-  ): Promise<OrderResponseDto | null>;
+  abstract create(order: CreateOrder): Promise<CompleteOrderDTO | null>;
 
-  abstract getOrderStatus(orderId: number): Promise<string | null>;
+  abstract update(orderId: number, status: OrderStatus): Promise<void>;
 
-  abstract updateOrderStatus(orderId: number, status: string): Promise<void>;
+  abstract delete(orderId: number): Promise<void>;
 
-  abstract updatePendingToAccepted(orderId: number): Promise<void>;
+  abstract findAll(): Promise<OrderDTO[]>;
 
-  abstract getOrderWithProductsById(
-    orderId: number,
-  ): Promise<GetOrderDto | null>;
+  abstract findById(orderId: number): Promise<CompleteOrderDTO | null>;
 
-  abstract getOrderById(orderId: number): Promise<Order | null>;
+  abstract findByStatus(status: OrderStatus): Promise<OrderDTO[]>;
 
-  abstract getAllPendingOrders(): Promise<Order[]>;
+  abstract getStatus(orderId: number): Promise<string | null>;
 
-  abstract getProductOrdersByOrderId(
-    orderId: number,
-  ): Promise<ProductOrderDto[]>;
+  abstract createLog(orderId: number): Promise<void>;
+
+  abstract getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDTO[]>;
 }

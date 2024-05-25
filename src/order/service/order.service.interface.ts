@@ -1,11 +1,10 @@
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { OrderResponseDto } from '../dto/order-reponse.dto';
-import { OrderUpdateDto } from '../dto/order-update.dto';
-import { Order } from '../model/order-model';
-import { GetOrderDto } from '../dto/get-order.dto';
+import { CompleteOrderDTO, OrderDTO } from '../dto';
+import { CreateOrder } from '../input';
+import { OrderStatus } from '../model';
 
 export abstract class IOrderService {
-  abstract createOrder(order: CreateOrderDto): Promise<OrderResponseDto>;
-  abstract updateOrderStatus(orderId: number, orderUpdate: OrderUpdateDto): any;
-  abstract getOrderById(orderId: number): Promise<GetOrderDto | null>;
+  abstract createOrder(order: CreateOrder): Promise<CompleteOrderDTO>;
+  abstract getOrders(): Promise<OrderDTO[]>;
+  abstract updateOrderStatus(orderId: number, nextStatus: OrderStatus): any;
+  abstract findOrderById(orderId: number): Promise<CompleteOrderDTO | null>;
 }

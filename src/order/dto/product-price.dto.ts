@@ -1,11 +1,12 @@
-export class ProductPriceDto {
-  readonly productId: number;
-  readonly price: number;
-  readonly quantity: number;
+import { ApiProperty } from "@nestjs/swagger";
+import { ProductOrderDTO } from "./product-order.dto";
 
-  constructor(productId: number, price: number, quantity: number) {
-    this.productId = productId;
-    this.price = price;
-    this.quantity = quantity;
+export class CompleteProductDTO extends ProductOrderDTO {
+  @ApiProperty()
+  readonly price: number;
+
+  constructor(product: CompleteProductDTO) {
+    super(product);
+    this.price = product.price;
   }
 }

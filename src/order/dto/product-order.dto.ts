@@ -1,19 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class ProductOrderDto {
-  @IsNotEmpty()
-  @IsNumber()
+export class ProductOrderDTO {
+
   @ApiProperty()
   productId: number;
 
-  @IsNotEmpty()
-  @IsNumber()
   @ApiProperty()
   quantity: number;
 
-  constructor(productId: number, quantity: number) {
-    this.productId = productId;
-    this.quantity = quantity;
+  constructor(product: ProductOrderDTO) {
+    this.productId = product.productId;
+    this.quantity = product.quantity;
   }
 }
