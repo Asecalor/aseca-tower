@@ -1,7 +1,8 @@
 import { Controller, Post, Body, HttpCode, Param, ParseIntPipe, Get } from '@nestjs/common';
 import { ClientService } from '../service/client.service';
-import { Client, CreateClientDto } from '../dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateClient } from '../input/client.input';
+import { ClientDTO } from '../dto/client.dto';
 
 @ApiTags('Client')
 @Controller('client')
@@ -11,9 +12,9 @@ export class ClientController {
   @Post()
   @ApiResponse({
     status: 201,
-    type: Client
+    type: ClientDTO
   })
-  async create(@Body() createClientDto: CreateClientDto) {
+  async create(@Body() createClientDto: CreateClient) {
     return this.clientService.create(createClientDto);
   }
 
@@ -21,7 +22,7 @@ export class ClientController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    type: [Client]
+    type: [ClientDTO]
   })
   async getClients() {
     return this.clientService.getClients()

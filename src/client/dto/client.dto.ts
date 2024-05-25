@@ -1,12 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CreateClientDto } from "./create-client.dto";
 
-export class Client extends CreateClientDto {
+export class ClientDTO {
     @ApiProperty()
     id: number;
+    @ApiProperty()
+    name: string;
 
-    constructor({ id, ...client }: Client) {
-        super(client);
-        this.id = id;
+    @ApiProperty()
+    lastName: string;
+
+    @ApiProperty()
+    email: string;
+
+    @ApiProperty()
+    address: string;
+
+    constructor(client: ClientDTO) {
+        this.id = client.id;
+        this.name = client.name;
+        this.lastName = client.lastName;
+        this.email = client.email;
+        this.address = client.address;
     }
 }
