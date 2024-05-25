@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { IProductService } from "../service/product.service.interface";
-import { CreateProductDTO, ProductDTO } from "../dto";
+import { ProductDTO } from "../dto";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreateProduct } from "../input/product.input";
 
 @ApiTags('Product')
 @Controller('product')
@@ -11,7 +12,7 @@ export class ProductController {
 
     @Post()
     @ApiResponse({status: 201, type: ProductDTO})
-    async createProduct(@Body() product: CreateProductDTO): Promise<ProductDTO> {
+    async createProduct(@Body() product: CreateProduct): Promise<ProductDTO> {
         return this.productService.createProduct(product);
     }
 

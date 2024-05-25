@@ -1,14 +1,15 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { IProductService } from "./product.service.interface";
-import { CreateProductDTO, ProductDTO } from "../dto";
+import { ProductDTO } from "../dto";
 import { IProductRepository } from "../repository/product.repository.interface";
+import { CreateProduct } from "../input/product.input";
 
 @Injectable()
 export class ProductService implements IProductService {
 
     constructor(@Inject(IProductRepository) private readonly productRepository: IProductRepository) { }
 
-    async createProduct(product: CreateProductDTO): Promise<ProductDTO> {
+    async createProduct(product: CreateProduct): Promise<ProductDTO> {
         const existingProduct = await this.productRepository.findByName(product.name);
         if (existingProduct) {
             throw new ConflictException('A product with this name already exists');

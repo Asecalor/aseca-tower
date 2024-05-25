@@ -1,7 +1,8 @@
-import { CreateProductDTO, ProductDTO } from "../dto";
+import { ProductDTO } from "../dto";
+import { CreateProduct } from "../input/product.input";
 
 export abstract class IProductRepository {
-    abstract create(product: CreateProductDTO): Promise<ProductDTO>;
+    abstract create(product: CreateProduct): Promise<ProductDTO>;
     // abstract update(id: number, product: CreateProductDTO): Promise<ProductDTO>;
     abstract delete(id: number): Promise<void>;
     abstract findAll(): Promise<ProductDTO[]>;
