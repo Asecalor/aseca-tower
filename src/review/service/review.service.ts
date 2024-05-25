@@ -1,5 +1,5 @@
 import { IReviewService } from './review.service.interface';
-import { ReviewDto } from '../dto/review.dto';
+import { ReviewDTO } from '../dto/review.dto';
 import {
   ConflictException,
   Inject,
@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import { IReviewRepository } from '../repository/review.repository.interface';
 import { IOrderRepository } from '../../order/repository/order.repository.interface';
-import { ReviewRatingDto } from '../dto/review-rating.dto';
+import { ReviewRatingDTO } from '../dto/review-rating.dto';
+import { OrderStatus } from 'src/order/model';
+import { Review } from '../input/review.input';
 
 @Injectable()
 export class ReviewService implements IReviewService {
@@ -19,26 +21,27 @@ export class ReviewService implements IReviewService {
     private readonly orderRepository: IOrderRepository,
   ) { }
 
-  async createReview(clientId: number, reviewDto: ReviewDto) {
-    const order = await this.orderRepository.getOrderById(reviewDto.orderId);
+  async createReview(orderId: number, review: Review) {
+    const order = await this.orderRepository.findById(orderId);
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    if (order.clientId !== clientId) {
+    if (order.clientId !== review.clientId) {
       throw new ConflictException('You are not allowed to review this order');
     }
     if (order.status !== 'DELIVERED') {
       throw new ConflictException('You can only review delivered orders');
     }
-    await this.reviewRepository.createReview(
-      clientId,
+    const reviewDto = new ReviewDTO({ ...review, orderId });
+    await this.reviewRepository.create(
       reviewDto,
       order.providerId,
     );
-    await this.orderRepository.updateOrderStatus(reviewDto.orderId, 'REVIEWED');
+    await this.orderRepository.update(reviewDto.orderId, OrderStatus.REVIEWED);
   }
 
-  async getAllRatingsByProvider(): Promise<ReviewRatingDto[]> {
-    return this.reviewRepository.getAllRatingsByProvider();
+  async findAllByProvider(): Promise<ReviewRatingDTO[]> {
+    return this.reviewRepository.findAllByProvider();
   }
+
 }

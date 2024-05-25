@@ -1,28 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
 
-export class ReviewDto {
-  @IsNumber()
-  @IsNotEmpty()
+export class ReviewDTO {
   @ApiProperty()
   readonly orderId: number;
+
+  @ApiProperty()
+  readonly clientId: number;
   
-  @IsInt()
-  @IsNotEmpty()
-  @Min(1)
-  @Max(10)
   @ApiProperty()
   readonly rating: number;
 
-  @IsNotEmpty()
-  @IsString()
   @ApiProperty()
   readonly comment: string;
+
+  constructor(review: ReviewDTO) {
+    this.clientId = review.clientId;
+    this.orderId = review.orderId;
+    this.rating = review.rating;
+    this.comment = review.comment;
+  }
 }

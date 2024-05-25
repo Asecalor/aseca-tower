@@ -1,30 +1,29 @@
 import { IReviewRepository } from './review.repository.interface';
-import { ReviewDto } from '../dto/review.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ReviewRatingDto } from '../dto/review-rating.dto';
+import { ReviewDTO } from '../dto/review.dto';
+import { ReviewRatingDTO } from '../dto/review-rating.dto';
 
 @Injectable()
 export class ReviewRepository implements IReviewRepository {
   constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
 
-  async createReview(
-    clientId: number,
-    reviewDto: ReviewDto,
+  async create(
+    review: ReviewDTO,
     providerId: number,
   ): Promise<void> {
     await this.db.reviews.create({
       data: {
-        clientId,
+        clientId: review.clientId,
         providerId,
-        orderId: reviewDto.orderId,
-        rating: reviewDto.rating,
-        comment: reviewDto.comment,
+        orderId: review.orderId,
+        rating: review.rating,
+        comment: review.comment,
       },
     });
   }
 
-  async getAllRatingsByProvider(): Promise<ReviewRatingDto[]> {
+  async findAllByProvider(): Promise<ReviewRatingDTO[]> {
     const ratings = await this.db.reviews.groupBy({
       by: ['providerId'],
       _avg: {
@@ -38,7 +37,7 @@ export class ReviewRepository implements IReviewRepository {
     });
     return ratings.map(
       (rating) =>
-        new ReviewRatingDto(rating.providerId, Math.round(rating._avg.rating)),
+        new ReviewRatingDTO(rating.providerId, Math.round(rating._avg.rating)),
     );
   }
 }

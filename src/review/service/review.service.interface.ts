@@ -1,8 +1,11 @@
-import { ReviewDto } from '../dto/review.dto';
-import { ReviewRatingDto } from '../dto/review-rating.dto';
+import { ReviewRatingDTO } from "../dto/review-rating.dto";
+import { ReviewDTO } from "../dto/review.dto";
+import { Review } from "../input/review.input";
+
 
 export abstract class IReviewService {
-  abstract createReview(clientId: number, reviewDto: ReviewDto): Promise<void>;
+  abstract createReview(orderId: number, review: Review): Promise<void>;
 
-  abstract getAllRatingsByProvider(): Promise<ReviewRatingDto[]>;
+  abstract findAllByProvider(): Promise<ReviewRatingDTO[]>;
+
 }

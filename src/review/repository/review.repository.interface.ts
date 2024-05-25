@@ -1,12 +1,8 @@
-import { ReviewDto } from '../dto/review.dto';
-import { ReviewRatingDto } from '../dto/review-rating.dto';
+import { ReviewDTO, } from '../dto/review.dto';
+import { ReviewRatingDTO } from '../dto/review-rating.dto';
 
 export abstract class IReviewRepository {
-  abstract createReview(
-    clientId: number,
-    reviewDto: ReviewDto,
-    providerId: number,
-  ): Promise<void>;
+  abstract create(review: ReviewDTO, providerId: number): Promise<void>;
 
-  abstract getAllRatingsByProvider(): Promise<ReviewRatingDto[]>;
+  abstract findAllByProvider(): Promise<ReviewRatingDTO[]>;
 }

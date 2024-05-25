@@ -9,9 +9,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { IReviewService } from '../service/review.service.interface';
-import { ReviewDto } from '../dto/review.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ReviewRatingDto } from '../dto/review-rating.dto';
+import { ReviewRatingDTO } from '../dto/review-rating.dto';
+import { Review } from '../input/review.input';
 
 @ApiTags('Review')
 @Controller('review')
@@ -20,18 +20,18 @@ export class ReviewController {
     @Inject(IReviewService) private readonly reviewService: IReviewService,
   ) { }
 
-  @Post('/:clientId')
+  @Post('/:orderId')
   @HttpCode(201)
   async createReview(
-    @Param('clientId', ParseIntPipe) clientId: number,
-    @Body() reviewDto: ReviewDto,
+    @Param('orderId', ParseIntPipe) orderId: number,
+    @Body() reviewDto: Review
   ) {
-    return this.reviewService.createReview(clientId, reviewDto);
+    return this.reviewService.createReview(orderId, reviewDto);
   }
 
   @Get('/ratings')
-  @ApiResponse({ status: 200, type: [ReviewRatingDto] })
+  @ApiResponse({ status: 200, type: [ReviewRatingDTO] })
   async getAllRatingsByProvider() {
-    return this.reviewService.getAllRatingsByProvider();
+    return this.reviewService.findAllByProvider();
   }
 }

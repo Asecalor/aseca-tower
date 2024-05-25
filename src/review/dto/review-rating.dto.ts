@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ReviewRatingDto {
+export class ReviewRatingDTO {
   @ApiProperty()
   readonly providerId: number;
 
