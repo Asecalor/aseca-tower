@@ -1,0 +1,32 @@
+import { Body, Controller, Get, HttpCode, Inject, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { IProviderService } from "../service/provider.service.interface";
+import { Provider } from "../input/provider.input";
+import { ProviderDTO } from "../dto/provider.dto";
+
+@ApiTags('Provider')
+@Controller('provider')
+export class ProviderController {
+    constructor(@Inject(IProviderService) private readonly providerService: IProviderService) { }
+
+    @Post()
+    @ApiResponse({ status: 201, type: ProviderDTO })
+    async createProvider(@Body() provider: Provider) {
+        return this.providerService.createProvider(provider);
+    }
+
+
+    @Get()
+    @ApiResponse({ status: 200, type: [ProviderDTO] })
+    async getAllProviders() {
+        return this.providerService.findAllProviders();
+    }
+
+    @Get('/:id')
+    @ApiResponse({ status: 200, type: ProviderDTO })
+    async getProviderById(@Param('id', ParseIntPipe) id: number) {
+        return this.providerService.findProviderById(id);
+    }
+
+
+}
