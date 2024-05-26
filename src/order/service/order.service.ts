@@ -66,7 +66,10 @@ export class OrderService implements IOrderService {
     return orderWithAdress;
   }
 
-  async getOrders(): Promise<OrderDTO[]> {
+  async getOrders(clientId?: number): Promise<OrderDTO[]> {
+    if (clientId) {
+      return await this.orderRepository.findByClientId(clientId);
+    }
     return await this.orderRepository.findAll();
   }
 

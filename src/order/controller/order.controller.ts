@@ -8,8 +8,9 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompleteOrderDTO, OrderDTO } from '../dto';
 import { CreateOrder, OrderUpdate } from '../input';
 
@@ -27,8 +28,9 @@ export class OrderController {
 
   @Get()
   @HttpCode(200)
-  async getOrders(): Promise<OrderDTO[]> {
-    return this.orderService.getOrders();
+  @ApiQuery({ name: 'clientId', required: false })
+  async getOrders(@Query('clientId', new ParseIntPipe({optional:true})) clientId?: number): Promise<OrderDTO[]> {
+    return this.orderService.getOrders(clientId);
   }
 
   @Put('/:orderId')

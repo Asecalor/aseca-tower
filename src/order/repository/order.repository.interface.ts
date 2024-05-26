@@ -13,6 +13,8 @@ export abstract class IOrderRepository {
 
   abstract findById(orderId: number): Promise<CompleteOrderDTO | null>;
 
+  abstract findByClientId(clientId: number): Promise<OrderDTO[]>;
+
   abstract findByStatus(status: OrderStatus): Promise<OrderDTO[]>;
 
   abstract getStatus(orderId: number): Promise<string | null>;

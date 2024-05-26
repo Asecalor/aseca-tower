@@ -4,7 +4,7 @@ import { OrderStatus } from '../model';
 
 export abstract class IOrderService {
   abstract createOrder(order: CreateOrder): Promise<CompleteOrderDTO>;
-  abstract getOrders(): Promise<OrderDTO[]>;
+  abstract getOrders(clientId?: number): Promise<OrderDTO[]>;
   abstract updateOrderStatus(orderId: number, nextStatus: OrderStatus): any;
   abstract findOrderById(orderId: number): Promise<CompleteOrderDTO | null>;
 }

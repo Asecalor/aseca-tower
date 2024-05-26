@@ -114,6 +114,14 @@ export class OrderRepository implements IOrderRepository {
     return await this.db.order.findMany();
   }
 
+  async findByClientId(clientId: number): Promise<OrderDTO[]> {
+    return await this.db.order.findMany({
+      where: {
+        clientId,
+      },
+    });
+  }
+
   async getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDTO[]> {
     const orderProducts = await this.db.orderProduct.findMany({
       where: {
