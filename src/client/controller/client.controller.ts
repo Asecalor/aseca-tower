@@ -1,13 +1,14 @@
-import { Controller, Post, Body, HttpCode, Param, ParseIntPipe, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Param, ParseIntPipe, Get, Inject } from '@nestjs/common';
 import { ClientService } from '../service/client.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateClient } from '../input/client.input';
 import { ClientDTO } from '../dto/client.dto';
+import { IClientService } from '../service/client.service.interface';
 
 @ApiTags('Client')
 @Controller('client')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) { }
+  constructor(@Inject(IClientService) private readonly clientService: IClientService) { }
 
   @Post()
   @ApiResponse({
@@ -15,7 +16,7 @@ export class ClientController {
     type: ClientDTO
   })
   async create(@Body() createClientDto: CreateClient) {
-    return this.clientService.create(createClientDto);
+    return this.clientService.createClient(createClientDto);
   }
 
   @Get()
@@ -25,13 +26,17 @@ export class ClientController {
     type: [ClientDTO]
   })
   async getClients() {
-    return this.clientService.getClients()
+    return this.clientService.findAllClients()
   }
 
   @Get('/:clientId')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    type: ClientDTO
+  })
   async updateOrderStatus(@Param('clientId', ParseIntPipe) clientId: number) {
-    return this.clientService.getClientById(clientId)
+    return this.clientService.findClientById(clientId)
   }
 
 
