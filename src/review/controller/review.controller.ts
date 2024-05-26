@@ -29,9 +29,17 @@ export class ReviewController {
     return this.reviewService.createReview(orderId, reviewDto);
   }
 
-  @Get('/ratings')
+  @Get('/rating')
   @ApiResponse({ status: 200, type: [ReviewRatingDTO] })
   async getAllRatingsByProvider() {
     return this.reviewService.findAllByProvider();
+  }
+
+  @Get('/rating/:providerId')
+  @ApiResponse({ status: 200, type: ReviewRatingDTO })
+  async getRatingByProvider(
+    @Param('providerId', ParseIntPipe) providerId: number
+  ) {
+    return this.reviewService.findByProvider(providerId);
   }
 }

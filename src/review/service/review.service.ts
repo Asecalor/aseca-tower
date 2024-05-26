@@ -11,6 +11,7 @@ import { IOrderRepository } from '../../order/repository/order.repository.interf
 import { ReviewRatingDTO } from '../dto/review-rating.dto';
 import { OrderStatus } from 'src/order/model';
 import { Review } from '../input/review.input';
+import { IProviderRepository } from 'src/provider/repository/provider.repository.interface';
 
 @Injectable()
 export class ReviewService implements IReviewService {
@@ -19,6 +20,8 @@ export class ReviewService implements IReviewService {
     private readonly reviewRepository: IReviewRepository,
     @Inject(IOrderRepository)
     private readonly orderRepository: IOrderRepository,
+    @Inject(IProviderRepository)
+    private readonly providerRepository: IProviderRepository,
   ) { }
 
   async createReview(orderId: number, review: Review) {
@@ -41,7 +44,16 @@ export class ReviewService implements IReviewService {
   }
 
   async findAllByProvider(): Promise<ReviewRatingDTO[]> {
-    return this.reviewRepository.findAllByProvider();
+    return this.reviewRepository.findRatings();
+  }
+
+  async findByProvider(providerId: number): Promise<ReviewRatingDTO> {
+    const provider = await this.providerRepository.findById(providerId);
+    if (!provider) {
+      throw new NotFoundException('Provider not found');
+    }
+
+    return this.reviewRepository.findRatingsByProviderId(providerId);
   }
 
 }

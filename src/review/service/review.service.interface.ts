@@ -8,4 +8,6 @@ export abstract class IReviewService {
 
   abstract findAllByProvider(): Promise<ReviewRatingDTO[]>;
 
+  abstract findByProvider(providerId: number): Promise<ReviewRatingDTO>;
+
 }

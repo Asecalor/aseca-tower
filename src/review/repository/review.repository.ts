@@ -6,7 +6,7 @@ import { ReviewRatingDTO } from '../dto/review-rating.dto';
 
 @Injectable()
 export class ReviewRepository implements IReviewRepository {
-  constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly db: PrismaService) { }
 
   async create(
     review: ReviewDTO,
@@ -23,7 +23,7 @@ export class ReviewRepository implements IReviewRepository {
     });
   }
 
-  async findAllByProvider(): Promise<ReviewRatingDTO[]> {
+  async findRatings(): Promise<ReviewRatingDTO[]> {
     const ratings = await this.db.reviews.groupBy({
       by: ['providerId'],
       _avg: {
@@ -39,5 +39,18 @@ export class ReviewRepository implements IReviewRepository {
       (rating) =>
         new ReviewRatingDTO(rating.providerId, Math.round(rating._avg.rating)),
     );
+  }
+
+  async findRatingsByProviderId(providerId: number): Promise<ReviewRatingDTO> {
+    const rating = await this.db.reviews.groupBy({
+      by: ['providerId'],
+      _avg: {
+        rating: true,
+      },
+      where: {
+        providerId,
+      },
+    });
+    return new ReviewRatingDTO(providerId, Math.round(rating[0]?._avg?.rating ?? 0));
   }
 }

@@ -6,6 +6,7 @@ import { ReviewService } from './service/review.service';
 import { IReviewService } from './service/review.service.interface';
 import { ReviewController } from './controller/review.controller';
 import { orderRepositoryProvider } from '../order/order.module';
+import { providerRepositoryProvider } from 'src/provider/provider.module';
 
 export const reviewRepositoryProvider = {
   provide: IReviewRepository,
@@ -24,6 +25,7 @@ export const reviewServiceProvider = {
     reviewRepositoryProvider,
     reviewServiceProvider,
     orderRepositoryProvider,
+    providerRepositoryProvider
   ],
 })
-export class ReviewModule {}
+export class ReviewModule { }
