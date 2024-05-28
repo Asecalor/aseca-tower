@@ -41,13 +41,13 @@ export class OrderService implements IOrderService {
         'Some of products where not found or it not belongs to the provider',
       );
     }
-    const orderWithAdress = new CompleteOrderDTO({ ...orderCreated, adress: clientAddress });
+    const orderWithAdress = new CompleteOrderDTO({ ...orderCreated, address: clientAddress });
     //Here we send the order to the warehouse api
     //If user wants to see the order status, should use GET order/{orderId}
     //I use host.docker.internal to point outside the docker container (host) for that request
     await firstValueFrom(
       this.httpService
-        .post('http://host.docker.internal:3001/warehouse/order', orderWithAdress)
+        .post('http://wms-api:3001/warehouse/order', orderWithAdress)
         .pipe(
           catchError((error: AxiosError) => {
             if (error.response?.status === 409) {
@@ -110,31 +110,31 @@ export class OrderService implements IOrderService {
   }
 
   // //Cron task to handle pending orders every 30 seconds
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  // private async handlePendingOrders() {
-  //   const pendingOrders = await this.orderRepository.findByStatus(OrderStatus.PENDING);
-  //   for (const order of pendingOrders) {
-  //     const clientAddress = await this.clientRepository.getClientAddress(
-  //       order.clientId,
-  //     );
-  //     const orderData = new CompleteOrderDTO({
-  //       ...order, adress: clientAddress, products: await this.orderRepository.getProductOrdersByOrderId(order.id),
-  //     });
-  //     await firstValueFrom(
-  //       this.httpService
-  //         .post('http://host.docker.internal:3001/warehouse/order', orderData)
-  //         .pipe(
-  //           catchError((error: AxiosError) => {
-  //             if (error.response?.status === 409) {
-  //               this.orderRepository.update(order.id, OrderStatus.REJECTED);
-  //               throw new ConflictException('Insufficient stock');
-  //             }
-  //             throw new InternalServerErrorException(
-  //               'Warehouse Api is not available',
-  //             );
-  //           }),
-  //         ),
-  //     );
-  //   }
-  // }
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  private async handlePendingOrders() {
+    const pendingOrders = await this.orderRepository.findByStatus(OrderStatus.PENDING);
+    for (const order of pendingOrders) {
+      const clientAddress = await this.clientRepository.getClientAddress(
+        order.clientId,
+      );
+      const orderData = new CompleteOrderDTO({
+        ...order, address: clientAddress, products: await this.orderRepository.getProductOrdersByOrderId(order.id),
+      });
+      await firstValueFrom(
+        this.httpService
+          .post('http://wms-api:3001/warehouse/order', orderData)
+          .pipe(
+            catchError((error: AxiosError) => {
+              if (error.response?.status === 409) {
+                this.orderRepository.update(order.id, OrderStatus.REJECTED);
+                throw new ConflictException('Insufficient stock');
+              }
+              throw new InternalServerErrorException(
+                'Warehouse Api is not available',
+              );
+            }),
+          ),
+      );
+    }
+  }
 }

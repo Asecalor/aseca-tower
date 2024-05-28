@@ -90,7 +90,7 @@ export class OrderRepository implements IOrderRepository {
 
     const products = order.orderProduct.map(product => new ProductOrderDTO(product))
 
-    return new CompleteOrderDTO({ ...order, products, adress: order.client.address });
+    return new CompleteOrderDTO({ ...order, products, address: order.client.address });
 
   }
 
@@ -120,7 +120,7 @@ export class OrderRepository implements IOrderRepository {
         clientId,
       },
     });
-  }
+  } 
 
   async getProductOrdersByOrderId(orderId: number): Promise<ProductOrderDTO[]> {
     const orderProducts = await this.db.orderProduct.findMany({

@@ -12,7 +12,7 @@ export class OrderDTO {
     @ApiProperty()
     readonly status: string;
     @ApiProperty()
-    readonly adress?: string;
+    readonly address?: string;
 
     constructor(order: OrderDTO) {
         this.id = order.id;
@@ -20,6 +20,6 @@ export class OrderDTO {
         this.clientId = order.clientId;
         this.totalAmount = order.totalAmount;
         this.status = order.status;
-        this.adress = order.adress;
+        this.address = order.address;
     }
 }
