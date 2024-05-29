@@ -6,27 +6,7 @@ import { IOrderService } from 'src/order/service/order.service.interface';
 import { HttpService } from '@nestjs/axios';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { OrderStatus } from 'src/order/model';
-
-const clientRepositoryMock: IClientRepository = {
-  getClientAddress: jest.fn(),
-  findByEmail: jest.fn(),
-  create: jest.fn(),
-  findById: jest.fn(),
-  findAll: jest.fn(),
-};
-
-const orderRepositoryMock: IOrderRepository = {
-  create: jest.fn(),
-  createLog: jest.fn(),
-  delete: jest.fn(),
-  findAll: jest.fn(),
-  findById: jest.fn(),
-  findByClientId: jest.fn(),
-  findByStatus: jest.fn(),
-  getProductOrdersByOrderId: jest.fn(),
-  getStatus: jest.fn(),
-  update: jest.fn(),
-};
+import { clientRepositoryMock, orderRepositoryMock } from 'test/util/mock';
 
 
 describe('Order Service Unit Test', () => {
