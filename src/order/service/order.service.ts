@@ -42,9 +42,6 @@ export class OrderService implements IOrderService {
       );
     }
     const orderWithAdress = new CompleteOrderDTO({ ...orderCreated, address: clientAddress });
-    //Here we send the order to the warehouse api
-    //If user wants to see the order status, should use GET order/{orderId}
-    //I use host.docker.internal to point outside the docker container (host) for that request
     await firstValueFrom(
       this.httpService
         .post('http://wms-api:3001/warehouse/order', orderWithAdress)
