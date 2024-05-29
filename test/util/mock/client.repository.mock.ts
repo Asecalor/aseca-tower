@@ -1,18 +1,11 @@
-export const clientRepositoryMock = {
+import { IClientRepository } from "src/client/repository/client.repository.interface";
+
+const clientRepositoryMock: IClientRepository = {
   getClientAddress: jest.fn(),
   findByEmail: jest.fn(),
   create: jest.fn(),
-  getClientById: jest.fn(),
+  findById: jest.fn(),
+  findAll: jest.fn(),
 };
 
-export const getClientAddressMockWithSuccesfulResponse = (
-  id: number,
-): string => {
-  return 'some address';
-};
-
-export const getClientAddressMockWithUnSuccesfulResponse = (
-  id: number,
-): null => {
-  return null;
-};
+export { clientRepositoryMock };
