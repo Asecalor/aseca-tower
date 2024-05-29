@@ -6,6 +6,7 @@ import { ReviewModule } from './review/review.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from './product/product.module';
 import { ProviderModule } from './provider/provider.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports:
@@ -14,7 +15,8 @@ import { ProviderModule } from './provider/provider.module';
       OrderModule,
       ProductModule,
       ReviewModule,
-      ScheduleModule.forRoot()
+      ScheduleModule.forRoot(),
+      StatsModule
     ],
   controllers: [],
   providers: [],
