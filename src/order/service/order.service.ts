@@ -57,9 +57,7 @@ export class OrderService implements IOrderService {
               );
               throw new ConflictException('Insufficient stock');
             }
-            throw new InternalServerErrorException(
-              'Warehouse Api is not available',
-            );
+            return Promise.resolve();
           }),
         ),
     );
