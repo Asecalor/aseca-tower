@@ -3,6 +3,7 @@ import { IProductService } from "./product.service.interface";
 import { ProductDTO } from "../dto";
 import { IProductRepository } from "../repository/product.repository.interface";
 import { CreateProduct } from "../input/product.input";
+import { ProductProviderDTO } from '../dto/product.provider.dto';
 
 @Injectable()
 export class ProductService implements IProductService {
@@ -27,6 +28,10 @@ export class ProductService implements IProductService {
 
     async findAllProducts(): Promise<ProductDTO[]> {
         return this.productRepository.findAll();
+    }
+
+    async findAllProductsByProvider(): Promise<ProductProviderDTO[]> {
+        return await this.productRepository.findAllByProvider();
     }
 
     async findProductById(id: number): Promise<ProductDTO> {

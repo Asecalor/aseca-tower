@@ -3,6 +3,7 @@ import { IProductRepository } from "./product.repository.interface";
 import { ProductDTO } from "../dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateProduct } from "../input/product.input";
+import { ProductProviderDTO } from '../dto/product.provider.dto';
 
 @Injectable()
 export class ProductRepository implements IProductRepository {
@@ -53,4 +54,33 @@ export class ProductRepository implements IProductRepository {
         });
         return new ProductDTO(product);
     }
+
+    async findAllByProvider(): Promise<ProductProviderDTO[]> {
+        const productsProviders = await this.db.productProvider.findMany({
+            include: {
+                product: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
+                provider: {
+                    select: {
+                        id: true,
+                        name: true,
+                        lastName: true
+                    }
+                }
+            }
+        });
+        return productsProviders.map(({ product, provider }) => ({
+            productId: product.id,
+            productName: product.name,
+            providerId: provider.id,
+            providerName: provider.name,
+            providerLastName: provider.lastName
+        }));
+    }
+
+
 }

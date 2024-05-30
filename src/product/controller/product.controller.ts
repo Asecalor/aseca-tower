@@ -3,6 +3,7 @@ import { IProductService } from "../service/product.service.interface";
 import { ProductDTO } from "../dto";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateProduct } from "../input/product.input";
+import { ProductProviderDTO } from '../dto/product.provider.dto';
 
 @ApiTags('Product')
 @Controller('product')
@@ -21,6 +22,14 @@ export class ProductController {
     async getProducts(): Promise<ProductDTO[]> {
         return this.productService.findAllProducts();
     }
+
+    @Get('/provider')
+    @ApiResponse({status: 200, type: [ProductProviderDTO]})
+    async getProductsProvider(): Promise<ProductProviderDTO[]> {
+        return this.productService.findAllProductsByProvider();
+    }
+
+
 
     @Get('/:id')
     @ApiResponse({status: 200, type: ProductDTO})
