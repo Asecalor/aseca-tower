@@ -6,6 +6,7 @@ const productRepositoryMock: IProductRepository = {
     findById: jest.fn(),
     delete: jest.fn(),
     findAll: jest.fn(),
+    findAllByProvider: jest.fn()
 };
 
 export { productRepositoryMock };
