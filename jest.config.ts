@@ -8,9 +8,9 @@ const config: Config.InitialOptions = {
     '^src/(.*)$': '<rootDir>/src/$1',
     '^test/(.*)$': '<rootDir>/test/$1',
   },
-  testPathIgnorePatterns:[
-    ".*\\.repository\\.test\\.ts$"
-  ]
+  // testPathIgnorePatterns:[
+  //   ".*\\.repository\\.test\\.ts$"
+  // ]
 }
 
 export default config

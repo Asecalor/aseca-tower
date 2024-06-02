@@ -20,3 +20,7 @@ To run the container, execute the following command in the terminal:
 ```bash
 $ docker compose up --build
 ```
+## Running Unit tests
+```bash
+$ npm run test:unit
+```
