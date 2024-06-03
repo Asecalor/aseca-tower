@@ -7,6 +7,7 @@ import { OrderController } from './controller/order.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { clientRepositoryProvider } from '../client/client.module';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 export const orderServiceProvider = {
   provide: IOrderService,
@@ -18,7 +19,7 @@ export const orderRepositoryProvider = {
   useClass: OrderRepository,
 };
 @Module({
-  imports: [PrismaModule, HttpModule],
+  imports: [PrismaModule, HttpModule,ConfigModule],
   controllers: [OrderController],
   providers: [
     orderServiceProvider,

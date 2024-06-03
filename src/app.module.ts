@@ -7,6 +7,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from './product/product.module';
 import { ProviderModule } from './provider/provider.module';
 import { StatsModule } from './stats/stats.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports:
@@ -16,7 +17,12 @@ import { StatsModule } from './stats/stats.module';
       ProductModule,
       ReviewModule,
       ScheduleModule.forRoot(),
-      StatsModule
+      StatsModule,
+      ConfigModule.forRoot(
+        {
+          envFilePath: '.env',
+        }
+      )
     ],
   controllers: [],
   providers: [],

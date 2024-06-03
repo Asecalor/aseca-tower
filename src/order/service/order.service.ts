@@ -16,16 +16,21 @@ import { AxiosError } from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CompleteOrderDTO, OrderDTO } from '../dto';
 import { CreateOrder } from '../input';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OrderService implements IOrderService {
+  private readonly wmsUrl: string;
   constructor(
     @Inject(IOrderRepository)
     private readonly orderRepository: IOrderRepository,
     @Inject(IClientRepository)
     private readonly clientRepository: IClientRepository,
     private readonly httpService: HttpService,
-  ) { }
+    private readonly configService: ConfigService,
+  ) {
+    this.wmsUrl= this.configService.get<string>('WAREHOUSE_URL');
+  }
 
   async createOrder(order: CreateOrder): Promise<CompleteOrderDTO> {
     const clientAddress = await this.clientRepository.getClientAddress(
@@ -44,7 +49,7 @@ export class OrderService implements IOrderService {
     const orderWithAdress = new CompleteOrderDTO({ ...orderCreated, address: clientAddress });
     await firstValueFrom(
       this.httpService
-        .post('http://wms-api:3001/warehouse/order', orderWithAdress)
+        .post(`${this.wmsUrl}/warehouse/order`, orderWithAdress)
         .pipe(
           catchError((error: AxiosError) => {
             if (error.response?.status === 409) {
@@ -117,7 +122,7 @@ export class OrderService implements IOrderService {
       });
       await firstValueFrom(
         this.httpService
-          .post('http://wms-api:3001/warehouse/order', orderData)
+          .post(`${this.wmsUrl}/warehouse/order`, orderData)
           .pipe(
             catchError((error: AxiosError) => {
               if (error.response?.status === 409) {
