@@ -1,19 +1,17 @@
-
-import { IClientRepository } from 'src/client/repository/client.repository.interface';
-import { IOrderRepository } from 'src/order/repository/order.repository.interface';
 import { OrderService } from 'src/order/service/order.service';
 import { IOrderService } from 'src/order/service/order.service.interface';
 import { HttpService } from '@nestjs/axios';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { OrderStatus } from 'src/order/model';
 import { clientRepositoryMock, orderRepositoryMock } from 'test/util/mock';
+import { ConfigService } from '@nestjs/config';
 
 
 describe('Order Service Unit Test', () => {
   let orderService: IOrderService;
 
   beforeAll(() => {
-    orderService = new OrderService(orderRepositoryMock, clientRepositoryMock, new HttpService);
+    orderService = new OrderService(orderRepositoryMock, clientRepositoryMock, new HttpService,new ConfigService());
   });
 
   it('should create an order with one provider product', async () => {

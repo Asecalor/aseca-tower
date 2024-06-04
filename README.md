@@ -24,3 +24,22 @@ $ docker compose up --build
 ```bash
 $ npm run test:unit
 ```
+## Running Integration tests
+First you need to set up WMS project. Make sure that you have the following .env
+```env
+CONTROL_TOWER_URL="http://localhost:3000"
+DATABASE_URL="postgresql://test:test@localhost:5436/test?schema=public"
+```
+
+On it project you need to run the following command:
+```bash
+$ npm run pre:test
+```
+After that you can run on this project the following command:
+```bash
+$ npm run test:integration
+```
+Please note that after running the integration tests you need to remove the test database
+```bash
+$ docker-compose -f docker-compose-test.yml down -v
+```
