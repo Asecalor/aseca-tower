@@ -22,4 +22,5 @@ export class OrderDTO {
         this.status = order.status;
         this.address = order.address;
     }
+
 }
