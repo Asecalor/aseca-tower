@@ -291,11 +291,8 @@ async function main() {
     const email = await generateUniqueEmail(
       `provider_${name.replace(/\s/g, '_').toLowerCase()}`,
     );
-    await prisma.provider.upsert({
-      where: { id: i + 1 },
-      update: {},
-      create: {
-        id: i + 1,
+    await prisma.provider.create({
+      data: {
         name: name.split(' ')[0],
         lastName: name.split(' ')[1],
         email: email,
@@ -310,11 +307,8 @@ async function main() {
       `client_${name.replace(/\s/g, '_').toLowerCase()}`,
     );
     const address = generateRandomAddress();
-    await prisma.client.upsert({
-      where: { id: i + 1 },
-      update: {},
-      create: {
-        id: i + 1,
+    await prisma.client.create({
+      data: {
         name: name.split(' ')[0],
         lastName: name.split(' ')[1],
         email: email,

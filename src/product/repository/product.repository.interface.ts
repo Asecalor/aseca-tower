@@ -9,5 +9,5 @@ export abstract class IProductRepository {
     abstract findAll(): Promise<ProductDTO[]>;
     abstract findAllByProvider(): Promise<ProductProviderDTO[]>;
     abstract findById(id: number): Promise<ProductDTO>;
-    abstract findByName(name: string): Promise<ProductDTO>;
+    abstract findByName(name: string): Promise<ProductDTO | null>;
 }

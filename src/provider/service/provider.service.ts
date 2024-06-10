@@ -11,6 +11,7 @@ export class ProviderService implements IProviderService {
 
     async createProvider(provider: Provider): Promise<ProviderDTO> {
         const existingProvider = await this.providerRepository.findByEmail(provider.email)
+        console.log(existingProvider)
         if (existingProvider) {
             throw new ConflictException('Provider already exists');
         }

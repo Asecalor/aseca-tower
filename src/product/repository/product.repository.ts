@@ -52,6 +52,9 @@ export class ProductRepository implements IProductRepository {
                 name: name
             }
         });
+        if (!product) {
+            return null;
+        }
         return new ProductDTO(product);
     }
 

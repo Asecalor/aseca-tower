@@ -12,10 +12,11 @@ export class ProductService implements IProductService {
 
     async createProduct(product: CreateProduct): Promise<ProductDTO> {
         const existingProduct = await this.productRepository.findByName(product.name);
-        if (existingProduct) {
-            throw new ConflictException('A product with this name already exists');
-        }
-        return this.productRepository.create(product);
+
+        if (!existingProduct) return this.productRepository.create(product);
+
+        else throw new ConflictException('Product already exists');
+
     }
     // async update(id: number, product: CreateProductDTO): Promise<ProductDTO>;
     async deleteProduct(id: number): Promise<void> {

@@ -9,7 +9,7 @@ export class ProviderRepository implements IProviderRepository {
     constructor(@Inject(PrismaService) private readonly db: PrismaService) { }
 
     async create(provider: Provider): Promise<ProviderDTO> {
-        return await this.db.provider.create({
+        return this.db.provider.create({
             data: {
                 name: provider.name,
                 email: provider.email,
@@ -19,11 +19,11 @@ export class ProviderRepository implements IProviderRepository {
     }
 
     async findAll(): Promise<ProviderDTO[]> {
-        return await this.db.provider.findMany();
+        return this.db.provider.findMany();
     }
 
     async findById(id: number): Promise<ProviderDTO> {
-        return await this.db.provider.findUnique({
+        return this.db.provider.findUnique({
             where: {
                 id
             }
@@ -31,7 +31,7 @@ export class ProviderRepository implements IProviderRepository {
     }
 
     async findByEmail(email: string): Promise<ProviderDTO> {
-        return await this.db.provider.findUnique({
+        return this.db.provider.findUnique({
             where: {
                 email
             }
