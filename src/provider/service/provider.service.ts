@@ -22,6 +22,14 @@ export class ProviderService implements IProviderService {
         return await this.providerRepository.create(provider);
     }
 
+    async deleteProvider(id: number): Promise<void> {
+        const provider = await this.providerRepository.findById(id);
+        if (!provider) {
+            throw new NotFoundException('Provider not found');
+        }
+        return await this.providerRepository.delete(id);
+    }
+
     async findAllProviders(): Promise<ProviderDTO[]> {
         return await this.providerRepository.findAll();
     }

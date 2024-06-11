@@ -19,6 +19,22 @@ export class ProviderRepository implements IProviderRepository {
         });
     }
 
+    async delete(id: number): Promise<void> {
+        // Delete associated records in ProductProvider
+        await this.db.productProvider.deleteMany({
+            where: {
+                providerId: id,
+            },
+        });
+
+        // Then delete the provider
+        await this.db.provider.delete({
+            where: {
+                id: id,
+            },
+        });
+    }
+
     async findAll(): Promise<ProviderDTO[]> {
         return this.db.provider.findMany();
     }

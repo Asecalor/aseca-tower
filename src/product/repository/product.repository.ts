@@ -24,10 +24,18 @@ export class ProductRepository implements IProductRepository {
     // }
 
     async delete(id: number): Promise<void> {
+        // Delete associated records in ProductProvider
+        await this.db.productProvider.deleteMany({
+            where: {
+                productId: id,
+            },
+        });
+
+        // Then delete the product
         await this.db.product.delete({
             where: {
-                id: id
-            }
+                id: id,
+            },
         });
     }
 

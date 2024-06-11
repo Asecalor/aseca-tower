@@ -4,6 +4,7 @@ import { AddProductToProviderDTO } from '../../product/dto/add.product.to.provid
 
 export abstract class IProviderService {
     abstract createProvider(provider: Provider): Promise<ProviderDTO>;
+    abstract deleteProvider(id: number): Promise<void>;
     abstract findAllProviders(): Promise<ProviderDTO[]>;
     abstract findProviderById(id: number): Promise<ProviderDTO>;
     abstract assignProviderToProduct(providerId: number,product: AddProductToProviderDTO): Promise<void>;

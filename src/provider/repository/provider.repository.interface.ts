@@ -4,6 +4,7 @@ import { AddProductToProviderDTO } from '../../product/dto/add.product.to.provid
 
 export abstract class IProviderRepository {
     abstract create(provider: Provider): Promise<ProviderDTO>;
+    abstract delete(id: number): Promise<void>;
     abstract findAll(): Promise<ProviderDTO[]>;
     abstract findById(id: number): Promise<ProviderDTO>;
     abstract findByEmail(email: string): Promise<ProviderDTO | null>;

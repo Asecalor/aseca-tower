@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { IProviderService } from "../service/provider.service.interface";
 import { Provider } from "../input/provider.input";
@@ -34,5 +34,10 @@ export class ProviderController {
     async assignProviderToProduct(@Param('providerId', ParseIntPipe) providerId: number,
                                   @Body() product: AddProductToProviderDTO) {
         await this.providerService.assignProviderToProduct(providerId, product);
+    }
+
+    @Delete('/:id')
+    async deleteProvider(@Param('id', ParseIntPipe) id: number) {
+        return this.providerService.deleteProvider(id);
     }
 }
