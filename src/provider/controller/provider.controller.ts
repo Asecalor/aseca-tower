@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpCode, Inject, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { IProviderService } from "../service/provider.service.interface";
 import { Provider } from "../input/provider.input";
 import { ProviderDTO } from "../dto/provider.dto";
+import { AddProductToProviderDTO } from '../../product/dto/add.product.to.provider.dto';
 
 @ApiTags('Provider')
 @Controller('provider')
@@ -27,6 +28,11 @@ export class ProviderController {
     async getProviderById(@Param('id', ParseIntPipe) id: number) {
         return this.providerService.findProviderById(id);
     }
-
-
+    @Post('/:providerId')
+    @HttpCode(200)
+    @ApiResponse({ status: 200 })
+    async assignProviderToProduct(@Param('providerId', ParseIntPipe) providerId: number,
+                                  @Body() product: AddProductToProviderDTO) {
+        await this.providerService.assignProviderToProduct(providerId, product);
+    }
 }

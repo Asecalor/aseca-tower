@@ -3,6 +3,7 @@ import { IProviderRepository } from "./provider.repository.interface";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ProviderDTO } from "../dto/provider.dto";
 import { Provider } from "../input/provider.input";
+import { AddProductToProviderDTO } from '../../product/dto/add.product.to.provider.dto';
 
 @Injectable()
 export class ProviderRepository implements IProviderRepository {
@@ -34,6 +35,15 @@ export class ProviderRepository implements IProviderRepository {
         return this.db.provider.findUnique({
             where: {
                 email
+            }
+        });
+    }
+
+    async assignProviderToProduct(providerId: number, product: AddProductToProviderDTO): Promise<any> {
+        return this.db.productProvider.create({
+            data: {
+                providerId,
+                ...product
             }
         });
     }

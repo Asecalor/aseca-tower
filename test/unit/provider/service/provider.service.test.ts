@@ -3,13 +3,13 @@ import { ProviderDTO } from "src/provider/dto/provider.dto";
 import { Provider } from "src/provider/input/provider.input";
 import { ProviderService } from "src/provider/service/provider.service";
 import { IProviderService } from "src/provider/service/provider.service.interface";
-import { providerRepositoryMock } from "test/util/mock";
+import { productRepositoryMock, providerRepositoryMock } from 'test/util/mock';
 
 describe("ProviderService", () => {
     let providerService: IProviderService;
 
     beforeEach(async () => {
-        providerService = new ProviderService(providerRepositoryMock);
+        providerService = new ProviderService(providerRepositoryMock,productRepositoryMock);
         jest.clearAllMocks();
     });
 

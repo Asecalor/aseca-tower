@@ -3,11 +3,15 @@ import { IProviderService } from "./provider.service.interface";
 import { ProviderDTO } from "../dto/provider.dto";
 import { Provider } from "../input/provider.input";
 import { IProviderRepository } from "../repository/provider.repository.interface";
+import { IProductRepository } from '../../product/repository/product.repository.interface';
+import { AddProductToProviderDTO } from '../../product/dto/add.product.to.provider.dto';
 
 @Injectable()
 export class ProviderService implements IProviderService {
 
-    constructor(@Inject(IProviderRepository) private readonly providerRepository: IProviderRepository) { }
+    constructor(@Inject(IProviderRepository) private readonly providerRepository: IProviderRepository,
+                @Inject(IProductRepository) private readonly productRepository: IProductRepository
+    ) { }
 
     async createProvider(provider: Provider): Promise<ProviderDTO> {
         const existingProvider = await this.providerRepository.findByEmail(provider.email)
@@ -28,5 +32,17 @@ export class ProviderService implements IProviderService {
             throw new NotFoundException('Provider not found');
         }
         return provider;
+    }
+
+    async assignProviderToProduct(providerId: number, product: AddProductToProviderDTO): Promise<void> {
+        const provider= await this.providerRepository.findById(providerId);
+        if (!provider) {
+            throw new NotFoundException('Provider not found');
+        }
+        const productFound= await this.productRepository.findById(product.productId);
+        if (!productFound) {
+            throw new NotFoundException('Product not found');
+        }
+        return await this.providerRepository.assignProviderToProduct(providerId, product);
     }
 }

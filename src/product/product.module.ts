@@ -23,6 +23,7 @@ export const productRepositoryProvider = {
         productServiceProvider,
         productRepositoryProvider,
     ],
+    exports: [productRepositoryProvider]
 })
 
 export class ProductModule { }

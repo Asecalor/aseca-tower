@@ -5,6 +5,7 @@ import { ProviderService } from "./service/provider.service";
 import { IProviderService } from "./service/provider.service.interface";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { ProviderController } from "./controller/provider.controller";
+import { ProductModule } from '../product/product.module';
 
 export const providerRepositoryProvider = {
     provide: IProviderRepository,
@@ -17,7 +18,7 @@ export const providerServiceProvider = {
 };
 
 @Module({
-    imports: [PrismaModule],
+    imports: [PrismaModule,ProductModule],
     controllers: [ProviderController],
     providers: [
         providerRepositoryProvider,

@@ -5,6 +5,7 @@ const providerRepositoryMock: IProviderRepository = {
     findAll: jest.fn(),
     findById: jest.fn(),
     findByEmail: jest.fn(),
+    assignProviderToProduct: jest.fn()
 }
 
 export { providerRepositoryMock };
