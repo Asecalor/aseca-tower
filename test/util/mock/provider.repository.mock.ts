@@ -2,6 +2,7 @@ import { IProviderRepository } from "src/provider/repository/provider.repository
 
 const providerRepositoryMock: IProviderRepository = {
     create: jest.fn(),
+    delete: jest.fn(),
     findAll: jest.fn(),
     findById: jest.fn(),
     findByEmail: jest.fn(),
